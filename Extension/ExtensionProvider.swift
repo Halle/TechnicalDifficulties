@@ -85,7 +85,7 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
 
     private(set) var device: CMIOExtensionDevice!
 
-    var isClean = true
+    var imageIsClean = true
 
     var availableProperties: Set<CMIOExtensionProperty> {
         return [.deviceTransportType, .deviceModel]
@@ -113,7 +113,7 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
             return
         }
 
-        let Filename = isClean ? "Clean" : "Dirty"
+        let Filename = imageIsClean ? "Clean" : "Dirty"
 
         guard let bundleURL = Bundle.main.url(forResource: Filename,
                                               withExtension: "jpg") else {
@@ -463,7 +463,7 @@ class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource {
 
         switch name {
         case .changeImage:
-            self.deviceSource.isClean.toggle()
+            self.deviceSource.imageIsClean.toggle()
             logger.debug("The camera extension has received a notification")
             logger.debug("The notification is: \(name.rawValue)")
             self.deviceSource.stopStreaming()
