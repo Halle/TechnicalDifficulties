@@ -473,28 +473,15 @@ class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource {
 
     private func startNotificationListeners() {
         for notificationName in NotificationName.allCases {
-            let observer = UnsafeRawPointer(Unmanaged.passUnretained(self)
-                .toOpaque())
+            let observer = UnsafeRawPointer(Unmanaged.passUnretained(self).toOpaque())
 
-            CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
-                                            observer,
-                                            { _, observer, name, _, _ in
-                                                if let observer = observer,
-                                                   let name = name {
-                                                    let extensionProviderSourceSelf =
-                                                        Unmanaged<ExtensionProviderSource>
-                                                            .fromOpaque(observer)
-                                                            .takeUnretainedValue()
-
-                                                    extensionProviderSourceSelf
-                                                        .notificationReceived(notificationName: name
-                                                            .rawValue as String)
-                                                }
-                                            },
-                                            notificationName
-                                                .rawValue as CFString,
-                                            nil,
-                                            .deliverImmediately)
+            CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), observer, { _, observer, name, _, _ in
+                if let observer = observer, let name = name {
+                    let extensionProviderSourceSelf = Unmanaged<ExtensionProviderSource>.fromOpaque(observer).takeUnretainedValue()
+                    extensionProviderSourceSelf.notificationReceived(notificationName: name.rawValue as String)
+                }
+            },
+            notificationName.rawValue as CFString, nil, .deliverImmediately)
         }
     }
 
