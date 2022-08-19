@@ -12,10 +12,6 @@ import SwiftUI
 
 struct ContentView {
     @ObservedObject var endToEndStreamProvider: EndToEndStreamProvider
-    let noVideoImage = NSImage(
-        systemSymbolName: "video.slash",
-        accessibilityDescription: "Image to indicate no video feed available"
-    )!.cgImage(forProposedRect: nil, context: nil, hints: nil)!
 }
 
 extension ContentView: View {
@@ -23,7 +19,8 @@ extension ContentView: View {
         VStack {
             Image(
                 self.endToEndStreamProvider
-                    .videoExtensionStreamOutputImage ?? noVideoImage,
+                    .videoExtensionStreamOutputImage ?? self.endToEndStreamProvider
+                    .noVideoImage,
                 scale: 1.0,
                 label: Text("Video Feed")
             )
@@ -57,6 +54,11 @@ class EndToEndStreamProvider: NSObject, ObservableObject,
     // MARK: Internal
 
     @Published var videoExtensionStreamOutputImage: CGImage?
+    let noVideoImage : CGImage = NSImage(
+        systemSymbolName: "video.slash",
+        accessibilityDescription: "Image to indicate no video feed available"
+    )!.cgImage(forProposedRect: nil, context: nil, hints: nil)! // OK to fail if this isn't available.
+    
     let providerSource: ExtensionProviderSource
 
     func bufferReceived(_ buffer: CMSampleBuffer) {
