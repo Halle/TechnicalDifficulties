@@ -252,7 +252,7 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
                       width: width,
                       height: height,
                       bitsPerComponent: image.bitsPerComponent,
-                      bytesPerRow: image.bytesPerRow,
+                      bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
                       space: colorspace,
                       bitmapInfo: CGImageAlphaInfo.noneSkipFirst
                           .rawValue)
